@@ -9,7 +9,7 @@ $(function () {
         }
         $.ajax({
             type: 'post',
-            url: 'http://192.168.19.68:8080/api/v1/admin/user/login',
+            url: BigNew.user_login,
             data: { username, password },
             success: function (backData) {
                 console.log(backData);
