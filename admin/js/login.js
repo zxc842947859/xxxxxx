@@ -14,6 +14,7 @@ $(function () {
             success: function (backData) {
                 console.log(backData);
                 if (backData.code === 200) {
+                    localStorage.setItem('token', backData.token);
                     $('.modal-body>p').text(backData.msg);
                     $('#myModal').modal()
                     $('#myModal').on('hidden.bs.modal', function (e) {
