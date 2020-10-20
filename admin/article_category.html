@@ -89,8 +89,8 @@
         <td>{{v.name}}</td>
         <td>{{v.slug}}</td>
         <td class="text-center">
-            <a href="#" data-toggle="modal" class=" btn btn-info btn-xs" data-id="{{v.id}}" data-target="#exampleModal">编辑</a>
-            <a href="#" class="btn btn-danger btn-xs" data-id="{{v.id}}">删除</a>
+            <a href="javascript:;" data-toggle="modal" class=" btn btn-info btn-xs" data-id="{{v.id}}" data-target="#exampleModal">编辑</a>
+            <a href="javascript:;" class="btn btn-danger btn-xs" data-id="{{v.id}}">删除</a>
         </td>
     </tr>
     {{/each}}
@@ -99,30 +99,29 @@
     $(function () {
         let cateData = null;
         // 获取文章分类
-        $.ajax({
-            type: 'get',
-            url: BigNew.category_list,
-            success: function (backData) {
-                console.log(backData);
-                if (backData.code === 200) {
-                    $('table>tbody').html(template('cateTemp', backData));
-                    cateData = backData;
+        function getCate() {
+            $.ajax({
+                type: 'get',
+                url: BigNew.category_list,
+                success: function (backData) {
+                    console.log(backData);
+                    if (backData.code === 200) {
+                        $('table>tbody').html(template('cateTemp', backData));
+                        cateData = backData;
+                    }
                 }
-            }
-        })
-        let $editBtn = null;
+            })
+        }
+        getCate();
 
         // 模态框弹出显示事件
         $('#exampleModal').on('show.bs.modal', function (event) {
-            if (event.relatedTarget.textContent === '新增分类') {
-                $('#exampleModalLabel').text('新增分类');
-            } else {
-                $('#exampleModalLabel').text('修改分类');
-                $('#recipient-name').val($(event.relatedTarget).parent().prev().prev().text());
-                $('#message-text').val($(event.relatedTarget).parent().prev().text());
-                $editBtn = $(event.relatedTarget);
-
-            }
+            // if (event.relatedTarget.textContent === '新增分类') {
+            //     $('#exampleModalLabel').text('新增分类');
+            // } else {
+            //     $('#exampleModalLabel').text('修改分类');
+            // }
+            $('#exampleModalLabel').text(event.relatedTarget.textContent === '新增分类' ? '新增分类' : '修改分类')
         })
 
         // 取消
@@ -133,7 +132,7 @@
             $('#error-msg').hide();
         })
         $('#recipient-name').on('blur', function () {
-            if (('#exampleModalLabel').text() === '新增分类') {
+            if ($('#exampleModalLabel').text() === '新增分类') {
                 cateData.data.forEach(element => {
                     if ($('#recipient-name').val() === element.name) {
                         $('#error-msg').show()
@@ -141,6 +140,14 @@
                 });
             }
         })
+
+        let $editBtn = null;
+        $('tbody').on('click', '.text-center .btn-info', function () {
+            $('#recipient-name').val($(this).parent().prev().prev().text());
+            $('#message-text').val($(this).parent().prev().text());
+            $editBtn = $(this);
+        })
+
         // 保存
         $('.modal-footer .btn-primary').on('click', function () {
             const name = $('#recipient-name').val().trim();
@@ -148,6 +155,7 @@
             // 有错误消息不保存
             if ($('#error-msg').css('display') === 'block' || !name || !slug) return;
 
+            // 新增分类
             if ($('#exampleModalLabel').text() === '新增分类') {
                 $.ajax({
                     type: 'post',
@@ -158,14 +166,15 @@
                     },
                     success: function (backData) {
                         if (backData.code === 201) {
-                            cateData.data.push({ name, slug })
-                            $('table>tbody').html(template('cateTemp', cateData));
+                            getCate();
                             $('#exampleModal form')[0].reset();
                             $('#exampleModal').modal('hide');
                         }
                     }
                 })
             } else {
+                // 修改分类
+                console.log($editBtn.attr('data-id'));
                 $.ajax({
                     type: 'post',
                     url: BigNew.category_edit,
@@ -178,12 +187,29 @@
                         console.log(backData);
                         if (backData.code === 200) {
                             $editBtn.parent().prev().text(slug).prev().text(name);
+
                         }
+                        $editBtn = null;
                         $('#exampleModal form')[0].reset();
                         $('#exampleModal').modal('hide');
                     }
                 })
             }
+        })
+
+        // 删除
+        $('tbody').on('click', '.text-center .btn-danger', function () {
+            $.ajax({
+                type: 'post',
+                url: BigNew.category_delete,
+                data: { id: $(this).attr('data-id') },
+                success: (backData) => {
+                    console.log(backData);
+                    if (backData.code === 204) {
+                        $(this).parent().parent().remove();
+                    }
+                }
+            })
         })
     })
 </script>
