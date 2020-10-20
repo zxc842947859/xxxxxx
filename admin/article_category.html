@@ -31,24 +31,54 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <!-- <tr>
                         <td>奇趣事</td>
                         <td>funny</td>
                         <td class="text-center">
-                            <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
-                            <a href="javascript:void(0)" class="btn btn-danger btn-xs">删除</a>
+                            <a href="javascript;" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
+                            <a href="javascript;" class="btn btn-danger btn-xs">删除</a>
                         </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei" data-toggle="modal"
-                                data-target="#myModal">新增分类</a>
+                            <a href="#" class="btn btn-success" id="xinzengfenlei" data-toggle="modal"
+                                data-target="#exampleModal">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
             </table>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">新增分类</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">名称:</label>
+                            <input type="text" class="form-control" id="recipient-name" name="name">
+                            <span id="error-msg" style="display: none; color: red;">分类名已存在</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">slug:</label>
+                            <textarea class="form-control" id="message-text" name="slug"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -59,7 +89,7 @@
         <td>{{v.name}}</td>
         <td>{{v.slug}}</td>
         <td class="text-center">
-            <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs" data-id="{{v.id}}">编辑</a>
+            <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs" data-id="{{v.id}}" data-target="#exampleModal">编辑</a>
             <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-id="{{v.id}}">删除</a>
         </td>
     </tr>
@@ -67,6 +97,7 @@
 </script>
 <script>
     $(function () {
+        let cateData = null;
         // 获取文章分类
         $.ajax({
             type: 'get',
@@ -75,9 +106,64 @@
                 console.log(backData);
                 if (backData.code === 200) {
                     $('table>tbody').html(template('cateTemp', backData));
+                    cateData = backData;
                 }
             }
         })
+
+        // 模态框弹出显示事件
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            if (event.relatedTarget.textContent === '新增分类') {
+                $('#exampleModalLabel').text('新增分类');
+            } else {
+                $('#exampleModalLabel').text('修改分类');
+            }
+        })
+
+        // 取消
+        $('.modal-footer .btn-default').on('click', function () {
+            $('#exampleModal form')[0].reset();
+        })
+        $('#recipient-name').on('focus', function () {
+            $('#error-msg').hide();
+        })
+        $('#recipient-name').on('blur', function () {
+            cateData.data.forEach(element => {
+                if ($('#recipient-name').val() === element.name) {
+                    $('#error-msg').show()
+
+                }
+            });
+        })
+        // 保存
+        $('.modal-footer .btn-primary').on('click', function () {
+            // 有错误消息不保存
+            if ( $('#error-msg').css('display') === 'block') return;
+
+            if ($('#exampleModalLabel').text() === '新增分类') {
+
+                 
+                $.ajax({
+                    type: 'post',
+                    url: BigNew.category_add,
+                    data: {
+                        name: $('#recipient-name').val(),
+                        slug: $('#message-text').val()
+                    },
+                    success: function (backData) {
+                        if (backData.code === 201) {
+                            cateData.data.push({ name: $('#recipient-name').val(), slug: $('#message-text').val() })
+                            $('table>tbody').html(template('cateTemp', cateData));
+                            $('#exampleModal form')[0].reset();
+                            $('#exampleModal').modal('hide');
+                        } 
+                    }
+                })
+            } else {
+
+            }
+        })
+
     })
 </script>
 
