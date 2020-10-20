@@ -69,10 +69,12 @@
                 </tbody>
             </table>
             <div class="row text-center">
+                <ul id="pagination-demo" class="pagination-sm"></ul>
             </div>
         </div>
     </div>
     <script src="./libs/http.js"></script>
+    <script src="./libs/jquery.twbsPagination.js"></script>
     <!-- 文章列表模板 -->
     <script id="art-temp" type="text/html">
         {{each data.data v}}
@@ -101,7 +103,7 @@
     <script>
         $(function () {
             // 获取所有文章
-            function getArt(option={}) {
+            function getArt(option = {}, initPage = true) {
                 $.ajax({
                     type: 'get',
                     url: BigNew.article_query,
@@ -116,9 +118,34 @@
                         console.log(backData);
                         if (backData.code === 200) {
                             $('tbody').html(template('art-temp', backData));
+                            if (initPage) {
+                                // 销毁分页器
+                                $('#pagination-demo').twbsPagination('destroy');
+                                if (backData.data.data.length !== 0) {
+                                    // 初始化分页器
+                                    $('#pagination-demo').twbsPagination({
+                                        totalPages: backData.data.totalPage,
+                                        visiblePages: 7,
+                                        startPage: 1,
+                                        hideOnlyOnePage: true,
+                                        first: '第一页',
+                                        prev: '上一页',
+                                        next: '下一页',
+                                        last: '最后一页',
+                                        onPageClick: function (event, page) {
+                                            // $('#page-content').text('Page ' + page);
+                                            if (!initPage) { // 防止分页器初始化时,重复获取第一页数据
+                                                getArt({ type: $('#selCategory').val(), state: $('#selStatus').val(), page }, false)
+                                            }
+
+                                        }
+                                    });
+                                }
+                            }
                         }
                     }
                 })
+               initPage ? setTimeout(()=> initPage=false, 500) : null;
             }
             getArt()
 
@@ -128,21 +155,30 @@
                 type: 'get',
                 url: BigNew.category_list,
                 success: function (backData) {
-                    console.log(backData);
                     if (backData.code === 200) {
                         $('#selCategory').html(template('cat-temp', backData));
                     }
                 }
             })
 
-            // 过滤指定分类和状态文章
-            $('#btnSearch').on('click', function (e) {
-                e.preventDefault();
-                getArt({
-                    type: $('#selCategory').val(),
-                    state: $('#selStatus').val()
-                });
-            })
+            ~function () {
+                let oldType = '';
+                let oldState = '';
+                // 过滤指定分类和状态文章
+                $('#btnSearch').on('click', function (e) {
+                    e.preventDefault();
+                    const type = $('#selCategory').val(),
+                        state = $('#selStatus').val();
+                    // 防止重复点击同类筛选
+                    if (type === oldType && oldState === state) return;
+                    [oldType, oldState] = [type, state];
+                    getArt({
+                        type,
+                        state
+                    });
+                })
+            }();
+
         })
     </script>
 </body>
