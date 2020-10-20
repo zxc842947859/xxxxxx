@@ -89,8 +89,8 @@
         <td>{{v.name}}</td>
         <td>{{v.slug}}</td>
         <td class="text-center">
-            <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs" data-id="{{v.id}}" data-target="#exampleModal">编辑</a>
-            <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-id="{{v.id}}">删除</a>
+            <a href="#" data-toggle="modal" class=" btn btn-info btn-xs" data-id="{{v.id}}" data-target="#exampleModal">编辑</a>
+            <a href="#" class="btn btn-danger btn-xs" data-id="{{v.id}}">删除</a>
         </td>
     </tr>
     {{/each}}
@@ -110,6 +110,7 @@
                 }
             }
         })
+        let $editBtn = null;
 
         // 模态框弹出显示事件
         $('#exampleModal').on('show.bs.modal', function (event) {
@@ -117,6 +118,10 @@
                 $('#exampleModalLabel').text('新增分类');
             } else {
                 $('#exampleModalLabel').text('修改分类');
+                $('#recipient-name').val($(event.relatedTarget).parent().prev().prev().text());
+                $('#message-text').val($(event.relatedTarget).parent().prev().text());
+                $editBtn = $(event.relatedTarget);
+
             }
         })
 
@@ -128,42 +133,58 @@
             $('#error-msg').hide();
         })
         $('#recipient-name').on('blur', function () {
-            cateData.data.forEach(element => {
-                if ($('#recipient-name').val() === element.name) {
-                    $('#error-msg').show()
-
-                }
-            });
+            if (('#exampleModalLabel').text() === '新增分类') {
+                cateData.data.forEach(element => {
+                    if ($('#recipient-name').val() === element.name) {
+                        $('#error-msg').show()
+                    }
+                });
+            }
         })
         // 保存
         $('.modal-footer .btn-primary').on('click', function () {
+            const name = $('#recipient-name').val().trim();
+            const slug = $('#message-text').val().trim();
             // 有错误消息不保存
-            if ( $('#error-msg').css('display') === 'block') return;
+            if ($('#error-msg').css('display') === 'block' || !name || !slug) return;
 
             if ($('#exampleModalLabel').text() === '新增分类') {
-
-                 
                 $.ajax({
                     type: 'post',
                     url: BigNew.category_add,
                     data: {
-                        name: $('#recipient-name').val(),
-                        slug: $('#message-text').val()
+                        name,
+                        slug
                     },
                     success: function (backData) {
                         if (backData.code === 201) {
-                            cateData.data.push({ name: $('#recipient-name').val(), slug: $('#message-text').val() })
+                            cateData.data.push({ name, slug })
                             $('table>tbody').html(template('cateTemp', cateData));
                             $('#exampleModal form')[0].reset();
                             $('#exampleModal').modal('hide');
-                        } 
+                        }
                     }
                 })
             } else {
-
+                $.ajax({
+                    type: 'post',
+                    url: BigNew.category_edit,
+                    data: {
+                        id: $editBtn.attr('data-id'),
+                        name,
+                        slug
+                    },
+                    success: function (backData) {
+                        console.log(backData);
+                        if (backData.code === 200) {
+                            $editBtn.parent().prev().text(slug).prev().text(name);
+                        }
+                        $('#exampleModal form')[0].reset();
+                        $('#exampleModal').modal('hide');
+                    }
+                })
             }
         })
-
     })
 </script>
 
