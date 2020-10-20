@@ -87,7 +87,37 @@
                 }
             }
         })
+
+        // 图片预览
+        // 给上传文件选项框添加 数据变化事件
+        $('#exampleInputFile').on('change', function () {
+            // 获取要上传的文件
+            const file = this.files[0];
+            // 创建要上传图片的路径
+            const imageURL = URL.createObjectURL(file);
+            // 设置img的src路径
+            $('.user_pic').attr('src', imageURL);
+        })
+        // 修改用户信息
+        $('#form').on('submit', function (e) {
+          e.preventDefault();
+          $.ajax({
+              type: 'post',
+              url: BigNew.user_edit,
+              data: new FormData(this),
+              contentType: false,
+              processData: false,
+              success: function (backData) {
+                  console.log(backData);
+                  if (backData.code === 200) {
+                    //   刷新首页  因为当前用户中心界面在window中 要刷新首页要找父级页面¨
+                      window.parent.location.reload();
+                  }
+              }
+          })  
+        })
     })
+
 
 
 </script>
