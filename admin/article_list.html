@@ -72,6 +72,80 @@
             </div>
         </div>
     </div>
+    <script src="./libs/http.js"></script>
+    <!-- 文章列表模板 -->
+    <script id="art-temp" type="text/html">
+        {{each data.data v}}
+        <tr>
+            <td>{{v.title}}</td>
+            <td>{{v.author}}</td>
+            <td>{{v.category}}</td>
+            <td class="text-center">{{v.date}}</td>
+            <td class="text-center">{{v.state}}</td>
+            <td class="text-center">
+                <a href="article_edit.html?id={{v.id}}" class="btn btn-default btn-xs">编辑</a>
+                <a data-id="{{v.id}}" href="javascript:void(0);" class="btn btn-danger btn-xs delete">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+
+    <!-- 文章分类模板 -->
+    <script id="cat-temp" type="text/html">
+        <option value="">所有分类</option>
+        {{each data v}}
+        <option value="{{v.id}}">{{v.name}}</option>
+        {{/each}}
+        
+    </script>
+    <script>
+        $(function () {
+            // 获取所有文章
+            function getArt(option={}) {
+                $.ajax({
+                    type: 'get',
+                    url: BigNew.article_query,
+                    data: {
+                        key: option.key,
+                        type: option.type,
+                        state: option.state,
+                        page: option.page,
+                        perpage: option.perpage || 10
+                    },
+                    success: function (backData) {
+                        console.log(backData);
+                        if (backData.code === 200) {
+                            $('tbody').html(template('art-temp', backData));
+                        }
+                    }
+                })
+            }
+            getArt()
+
+
+            // 获取所有类别
+            $.ajax({
+                type: 'get',
+                url: BigNew.category_list,
+                success: function (backData) {
+                    console.log(backData);
+                    if (backData.code === 200) {
+                        $('#selCategory').html(template('cat-temp', backData));
+                    }
+                }
+            })
+
+            // 过滤指定分类和状态文章
+            $('#btnSearch').on('click', function (e) {
+                e.preventDefault();
+                getArt({
+                    type: $('#selCategory').val(),
+                    state: $('#selStatus').val()
+                });
+            })
+        })
+    </script>
 </body>
+
 
 </html>
