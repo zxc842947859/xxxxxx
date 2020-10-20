@@ -78,19 +78,60 @@
         </div>
     </div>
 </body>
+<script src="./libs/http.js"></script>
+<!-- 文章分类模板 -->
+<script id="cateTemp" type="text/html">
+    {{each data v}}
+        <option value="{{v.id}}">{{v.name}}</option>
+    {{/each}}
+</script>
 <script>
-    // 初始化日期选择
-    jeDate('#testico', {
-        format: "YYYY-MM-DD",
-        isinitVal: true,//默认显示当前时间
-        // festival: true,//显示农历
-        // theme:{ bgcolor:"#f00",color:"#68f120", pnColor:"#88ffe0"} 
-    });
-    /* 3.js初始化富文本编辑器 */
-    var E = window.wangEditor;
-    var editor = new E('#editor')
-    // 或者 var editor = new E( document.getElementById('editor') )
-    editor.create();
+    $(function () {
+        // 初始化日期选择
+        jeDate('#testico', {
+            format: "YYYY-MM-DD",
+            isinitVal: true,//默认显示当前时间
+            zIndex:10001
+            // festival: true,//显示农历
+            // theme:{ bgcolor:"#f00",color:"#68f120", pnColor:"#88ffe0"} 
+        });
+        /* 3.js初始化富文本编辑器 */
+        const E = window.wangEditor;
+        const editor = new E('#editor')
+        // 或者 var editor = new E( document.getElementById('editor') )
+        editor.create();
+
+        // 获取文章所有类别
+        $.ajax({
+            type: 'get',
+            url: BigNew.category_list,
+            success: function (catData) {
+                console.log(catData);
+                if (catData.code === 200) {
+                    $('select.category').html(template('cateTemp', catData));
+                }
+                // 获取当前文章所有信息
+                $.ajax({
+                    type: 'get',
+                    url: BigNew.article_search,
+                    data: { id: location.search.split('=')[1] },
+                    success: function (backData) {
+                        console.log(backData);
+                        if (backData.code === 200) {
+                            const data = backData.data
+                            $('select.category').val(data.categoryId);
+                            $('#inputTitle').val(data.title);
+                            $('.article_cover').attr('src', data.cover);
+                            $('#testico').val(data.date);
+                            editor.txt.html(data.content);
+                        }
+                    }
+                })
+            }
+        })
+
+    })
+
 </script>
 
 </html>
