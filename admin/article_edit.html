@@ -56,7 +56,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">发布时间：</label>
                     <div class="col-sm-2">
-                        <input type="text" class="jeinput" id="testico" placeholder="YYYY-MM-DD">
+                        <input type="text" class="jeinput" id="testico" placeholder="YYYY-MM-DD" name="date">
                         <div class="icons jebtns"
                             onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD',isinitVal:true})">
                         </div>
@@ -91,7 +91,7 @@
         jeDate('#testico', {
             format: "YYYY-MM-DD",
             isinitVal: true,//默认显示当前时间
-            zIndex:10001
+            zIndex: 10001
             // festival: true,//显示农历
             // theme:{ bgcolor:"#f00",color:"#68f120", pnColor:"#88ffe0"} 
         });
@@ -128,6 +128,29 @@
                     }
                 })
             }
+        })
+
+        // 文章修改
+        $('#form').on('submit', function (e) {
+            e.preventDefault();
+            console.log($(e.originalEvent.submitter).text() === '修改' ? '已发布' : '草稿');
+            const data = new FormData($('#form')[0]);
+            data.append('content', editor.txt.html());
+            data.append('state', $(e.originalEvent.submitter).text() === '修改' ? '已发布' : '草稿');
+            data.append( 'id', location.search.split('=')[1]);
+            $.ajax({
+                type: 'post',
+                url: BigNew.article_edit,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (backData) {
+                    console.log(backData);
+                    if (backData.code === 200) {
+                        location.href = './article_list.html';
+                    }
+                }
+            })
         })
 
     })

@@ -125,7 +125,7 @@
             console.log($(e.originalEvent.submitter).text() === '发布' ? '已发布' : '草稿');
             const data = new FormData($('#form')[0]);
             data.append('content', editor.txt.html());
-            data.append('state', $(this).text() === '发布' ? '已发布' : '草稿')
+            data.append('state', $(e.originalEvent.submitter).text() === '修改' ? '已发布' : '草稿')
             $.ajax({
                 type: 'post',
                 url: BigNew.article_publish,
