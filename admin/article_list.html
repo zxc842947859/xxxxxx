@@ -144,7 +144,7 @@
                         }
                     }
                 })
-               initPage ? setTimeout(()=> initPage=false, 500) : null;
+                initPage ? setTimeout(() => initPage = false, 500) : null;
             }
             getArt()
 
@@ -178,6 +178,20 @@
                 })
             }();
 
+            // 删除文章
+            $('tbody').on('click', '.text-center .delete', function () {
+                $.ajax({
+                    type: 'post',
+                    url: BigNew.article_delete,
+                    data: { id: $(this).attr('data-id') },
+                    success: (backData) => {
+                        console.log(backData);
+                        if (backData.code === 204) {
+                            $(this).parent().parent().remove();
+                        }
+                    }
+                })
+            })
         })
     </script>
 </body>
