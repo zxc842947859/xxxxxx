@@ -134,13 +134,26 @@
           success: (backData) => {
             console.log(backData);
             if (backData.code === 200) {
-              $(this).removeClass('btn-info').addClass('btn-warning').text('拒绝').parent().prev().text(backData.msg);
+              $(this).removeClass('btn-info pass').addClass('btn-warning reject').text('拒绝').parent().prev().text(backData.msg);
             }
           }
         })
       })
 
       // 评论不通过
+      $('tbody').on('click', '.reject',function () {
+        $.ajax({
+          type: 'post',
+          url: BigNew.comment_reject,
+          data: {id: $(this).attr('data-id')},
+          success: (backData) => {
+            console.log(backData);
+            if (backData.code === 200) {
+              $(this).parent().prev().text(backData.msg).end().end().remove();
+            }
+          }
+        })
+      })
 
     })
   </script>
