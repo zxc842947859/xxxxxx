@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=s, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 1.导入框架 -->
+    <script src="./echarts.js"></script>
+    <script src="../admin/libs/http.js"></script>
+</head>
+
+<body>
+    <!-- 2.准备html -->
+    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <div id="main" style="width: 900px;height:400px;"></div>
+
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        const xhr = new XMLHttpRequest();
+        xhr.open('get', BigNew.dataCategory);
+        xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+        xhr.send();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                const backData = JSON.parse(xhr.response)
+                console.log(backData);
+                if (backData.code === 200) {
+                    loadPieEcharts(backData.date)
+                }
+            }
+        }
+
+        function loadPieEcharts(data) {
+            option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                title: {
+                    text: '分类文章数量比',
+                    left: 'center'
+                },
+                legend: {
+                    top: '30',
+                    left: 'center',
+                    data: data.map((item) => item.name)
+                },
+                color: ['#5885e8', '#13cfd5', '#00ce68', '#ff9565', '#20ff19'],
+                series: [
+                    {
+                        name: '分类名称',
+                        type: 'pie',
+                        radius: ['50%', '70%'],
+                        center: ['50%', '55%'],
+                        avoidLabelOverlap: true,
+                        // startAngle: 360,
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: '30',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        labelLine: {
+                            show: true
+                        },
+                        data: data.map((item) => {return {name: item.name, value: item.articles}})
+                    }
+                ]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        }
+
+
+
+    </script>
+</body>
+
+</html>
