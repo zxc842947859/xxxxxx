@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <label for="inputTitle" class="col-sm-2 control-label">文章标题：</label>
                     <div class="col-sm-10">
-                        <input type="text" name="title" class="form-control title" id="inputTitle" value="文章标题文字">
+                        <input type="text" name="title" class="form-control title" id="inputTitle" placeholder="文章标题文字">
                     </div>
                 </div>
                 <div class="form-group">
@@ -55,7 +55,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">发布时间：</label>
                     <div class="col-sm-2">
-                        <input type="text" class="jeinput" id="testico" placeholder="YYYY-MM-DD">
+                        <input type="text" class="jeinput" id="testico" placeholder="YYYY-MM-DD" name="date">
                         <div class="icons jebtns"
                             onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD',isinitVal:true})">
                         </div>
@@ -79,6 +79,13 @@
     </div>
 </body>
 <script src="./libs/http.js"></script>
+<!-- 文章分类模板 -->
+<script id="cateTemp" type="text/html">
+    {{each data v}}
+        <option value="{{v.id}}">{{v.name}}</option>
+    {{/each}}
+</script>
+
 <script>
     $(function () {
         // 初始化日期选择
@@ -86,15 +93,58 @@
             format: "YYYY-MM-DD",
             isinitVal: true,//默认显示当前时间
             zIndex: 10001
-            // festival: true,//显示农历
-            // theme:{ bgcolor:"#f00",color:"#68f120", pnColor:"#88ffe0"} 
+
         });
         /* 3.js初始化富文本编辑器 */
         const E = window.wangEditor;
         const editor = new E('#editor')
-        // 或者 var editor = new E( document.getElementById('editor') )
         editor.create();
+
+        // 文章封面预览
+        $('#inputCover').on('change', function () {
+            const file = this.files[0];
+            const imageURL = URL.createObjectURL(file);
+            $(this).prev().attr('src', imageURL);
+        })
+
+        // 获取所有文章类别
+        $.ajax({
+            type: 'get',
+            url: BigNew.category_list,
+            success: function (catData) {
+                console.log(catData);
+                if (catData.code === 200) {
+                    $('select.category').html(template('cateTemp', catData));
+                }
+            }
+        })
+
+        // 文章发布
+        $('#form').on('submit', function (e) {
+            e.preventDefault();
+            console.log($(e.originalEvent.submitter).text() === '发布' ? '已发布' : '草稿');
+            const data = new FormData($('#form')[0]);
+            data.append('content', editor.txt.html());
+            data.append('state', $(this).text() === '发布' ? '已发布' : '草稿')
+            $.ajax({
+                type: 'post',
+                url: BigNew.article_publish,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (backData) {
+                    console.log(backData);
+                    if (backData.code === 200) {
+                        location.href = './article_list.html';
+                    }
+                }
+            })
+        })
     })
+
+
+
+
 </script>
 
 </html>
