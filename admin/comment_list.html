@@ -155,6 +155,21 @@
         })
       })
 
+      // 删除评论
+      $('tbody').on('click', '.delete',function () {
+        $.ajax({
+          type: 'post',
+          url: BigNew.comment_delete,
+          data: {id: $(this).attr('data-id')},
+          success: (backData) => {
+            console.log(backData);
+            if (backData.code === 200) {
+              $(this).parent().parent().remove();
+            }
+          }
+        })
+      })
+
     })
   </script>
 </body>
