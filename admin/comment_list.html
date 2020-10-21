@@ -78,7 +78,7 @@
   <script>
     $(function () {
       // 获取评论
-      function getCommentList(option={}, initPage=true) {
+      function getCommentList(option = {}, initPage = true) {
         $.ajax({
           type: 'get',
           url: BigNew.comment_list,
@@ -126,49 +126,75 @@
       getCommentList();
 
       // 评论通过
-      $('tbody').on('click', '.pass',function () {
-        $.ajax({
-          type: 'post',
-          url: BigNew.comment_pass,
-          data: {id: $(this).attr('data-id')},
-          success: (backData) => {
-            console.log(backData);
-            if (backData.code === 200) {
-              $(this).removeClass('btn-info pass').addClass('btn-warning reject').text('拒绝').parent().prev().text(backData.msg);
-            }
-          }
-        })
-      })
+      // $('tbody').on('click', '.pass',function () {
+      //   $.ajax({
+      //     type: 'post',
+      //     url: BigNew.comment_pass,
+      //     data: {id: $(this).attr('data-id')},
+      //     success: (backData) => {
+      //       console.log(backData);
+      //       if (backData.code === 200) {
+      //         $(this).removeClass('btn-info pass').addClass('btn-warning reject').text('拒绝').parent().prev().text(backData.msg);
+      //       }
+      //     }
+      //   })
+      // })
 
-      // 评论不通过
-      $('tbody').on('click', '.reject',function () {
-        $.ajax({
-          type: 'post',
-          url: BigNew.comment_reject,
-          data: {id: $(this).attr('data-id')},
-          success: (backData) => {
-            console.log(backData);
-            if (backData.code === 200) {
-              $(this).parent().prev().text(backData.msg).end().end().remove();
-            }
-          }
-        })
-      })
+      // // 评论不通过
+      // $('tbody').on('click', '.reject',function () {
+      //   $.ajax({
+      //     type: 'post',
+      //     url: BigNew.comment_reject,
+      //     data: {id: $(this).attr('data-id')},
+      //     success: (backData) => {
+      //       console.log(backData);
+      //       if (backData.code === 200) {
+
+      //       }
+      //     }
+      //   })
+      // })
 
       // 删除评论
-      $('tbody').on('click', '.delete',function () {
+      // $('tbody').on('click', '.delete', function () {
+      //   $.ajax({
+      //     type: 'post',
+      //     url: BigNew.comment_delete,
+      //     data: { id: $(this).attr('data-id') },
+      //     success: (backData) => {
+      //       console.log(backData);
+      //       if (backData.code === 200) {
+      //         $(this).parent().parent().remove();
+      //       }
+      //     }
+      //   })
+      // })
+
+
+      // 删除 通过 不通过
+      $('tbody').on('click', '.delete,.reject,.pass', function () {
         $.ajax({
           type: 'post',
-          url: BigNew.comment_delete,
-          data: {id: $(this).attr('data-id')},
+          url: ($(this).text() === '批准' ?
+              BigNew.comment_pass :
+              $(this).text() === '拒绝' ?
+              BigNew.comment_reject :
+              BigNew.comment_delete),
+          data: { id: $(this).attr('data-id') },
           success: (backData) => {
             console.log(backData);
             if (backData.code === 200) {
-              $(this).parent().parent().remove();
+              ($(this).text() === '批准' ?
+              $(this).removeClass('btn-info pass').addClass('btn-warning reject').text('拒绝').parent().prev().text(backData.msg) :
+              $(this).text() === '拒绝' ?
+              $(this).parent().prev().text(backData.msg).end().end().remove() :
+              $(this).parent().parent().remove());
             }
           }
         })
       })
+
+
 
     })
   </script>
