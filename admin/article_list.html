@@ -101,7 +101,11 @@
         
     </script>
     <script>
+
         $(function () {
+            // 展示文章列表页面时让 左侧文章列表导航高亮
+            $('.level02>li:eq(0)', window.parent.document).addClass('active').siblings().removeClass('active');
+
             // 获取所有文章
             function getArt(option = {}, initPage = true) {
                 $.ajax({
@@ -194,14 +198,14 @@
             })
 
             // 发布文章
-            $('#release_btn').on('click', function () {
-                $('.level02>li:eq(1)', window.parent.document).addClass('active').siblings().removeClass('active');
-            })
+            // $('#release_btn').on('click', function () {
+            //     // $('.level02>li:eq(1)', window.parent.document).addClass('active').siblings().removeClass('active');
+            // })
 
-            $('tbody').on('click', '.text-center .btn-default', function () {
-                $('.level02>li:eq(1)', window.parent.document).addClass('active').siblings().removeClass('active');
+            // $('tbody').on('click', '.text-center .btn-default', function () {
+            //     // $('.level02>li:eq(1)', window.parent.document).addClass('active').siblings().removeClass('active');
 
-            })
+            // })
         })
     </script>
 </body>

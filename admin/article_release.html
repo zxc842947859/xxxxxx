@@ -87,7 +87,11 @@
 </script>
 
 <script>
+
     $(function () {
+        // 展示发布文章页面时让 左侧文章发布导航高亮
+        $('.level02>li:eq(1)', window.parent.document).addClass('active').siblings().removeClass('active');
+
         // 初始化日期选择
         jeDate('#testico', {
             format: "YYYY-MM-DD",
@@ -136,7 +140,7 @@
                     console.log(backData);
                     if (backData.code === 200) {
                         location.href = './article_list.html';
-                        $('.level02>li:eq(0)', window.parent.document).addClass('active').siblings().removeClass('active');
+                        // $('.level02>li:eq(0)', window.parent.document).addClass('active').siblings().removeClass('active');
 
                     }
                 }
