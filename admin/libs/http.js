@@ -23,6 +23,10 @@
         comment_pass:    baseURL + '/admin/comment/pass',//文章评论通过
         comment_reject:  baseURL + '/admin/comment/reject',//文章评论不通过
         comment_delete:  baseURL + '/admin/comment/delete',//文章评论删除
+        articleNewCount: baseURL + '/admin/data/article', // 日文章新增数据统计
+        dataInfo:        baseURL + '/admin/data/info', // 数据统计
+        dataCategory:        baseURL + '/admin/data/category', // 各类型文章数量统计
+
     };
 
     //暴露接口
