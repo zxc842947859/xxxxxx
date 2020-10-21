@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=s, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 1.导入框架 -->
+    <script src="./echarts.js"></script>
+    <script src="../admin/libs/http.js"></script>
+</head>
+
+<body>
+    <!-- 2.准备html -->
+    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <div id="main" style="width: 900px;height:400px;"></div>
+
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        // const xhr = new XMLHttpRequest();
+        // xhr.open('get', BigNew.dataCategory);
+        // xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+        // xhr.send();
+        // xhr.onreadystatechange = function () {
+        //     if (xhr.readyState === 4) {
+        //         const backData = JSON.parse(xhr.response)
+        //         console.log(backData);
+        //         if (backData.code === 200) {
+        //             loadPieEcharts(backData.date)
+        //         }
+        //     }
+        // }
+        loadBarEcharts()
+        
+
+        function loadBarEcharts() {
+            option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                title: {
+                    text: '分类访问量',
+                    left: 'center'
+                },
+                legend: {
+                    top: '30',
+                    data: ["爱生活", "爱旅行", "爱美食", "爱运动", "经济特区", "魂牵梦萦"]
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['一月', '二月', '三月', '四月']
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                color: ['#5885e8', '#13cfd5', '#00ce68', '#ff9565', '#20ff19'],
+
+                series: [
+                    {
+                        name: '爱生活',
+                        type: 'bar',
+                        data: [77, 32, 36, 47, 33, 1]
+                    },
+                    {
+                        name: '爱旅行',
+                        type: 'bar',
+                        data: [41, 77, 27, 61, 17, 12]
+                    },
+                    {
+                        name: '爱美食',
+                        type: 'bar',
+                        data: [87, 57, 89, 44, 54, 17]
+                    },
+                    {
+                        name: '爱运动',
+                        type: 'bar',
+                        data: [70, 24, 30, 49, 19, 77]
+                    },
+                    {
+                        name: '经济特区',
+                        type: 'bar',
+                        data: [12, 50, 90, 50, 50, 76]
+                    },
+                    {
+                        name: '魂牵梦萦',
+                        type: 'bar',
+                        data: [1, 84, 8, 15, 66, 88]
+                    },
+
+                ]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        }
+
+
+
+    </script>
+</body>
+
+</html>

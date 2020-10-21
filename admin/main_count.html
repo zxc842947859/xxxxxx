@@ -185,6 +185,7 @@
             }
 
             function loadPieEcharts(data) {
+                console.log(data.map((item) => parseInt(Math.random() * 100)));
                 option = {
                     tooltip: {
                         trigger: 'item',
@@ -232,77 +233,103 @@
 
     </script>
     <!-- 柱状图 -->
-    <script>
-        // 基于准备好的dom，初始化echarts实例
-        var myChart2 = echarts.init(document.getElementById('column_show'));
-
-        option2 = {
-            title: {
-                left: 'center',
-                text: '分类访问量',
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                    type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
-                },
-
-            },
-            legend: {
-                data: ['爱生活', '趣美味', '爱旅行', '爱电影', '爱游泳'],
-                top: 30
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: [
-                {
-                    type: 'category',
-                    data: ['一月', '二月', '三月', '四月']
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            color: ['#5885e8', '#13cfd5', '#00ce68', '#ff9565', '#20ff19'],
-            series: [
-                {
-                    name: '爱生活',
-                    type: 'bar',
-                    data: [320, 332, 301, 334]
-                },
-                {
-                    name: '趣美味',
-                    type: 'bar',
-                    data: [220, 132, 101, 134]
-                },
-                {
-                    name: '爱旅行',
-                    type: 'bar',
-                    data: [220, 182, 191, 234]
-                },
-                {
-                    name: '爱电影',
-                    type: 'bar',
-                    data: [150, 232, 201, 154]
-                },
-                {
-                    name: '爱游泳',
-                    type: 'bar',
-                    data: [262, 118, 364, 426],
-                },
-
-            ]
-        };
+    <script type="text/javascript">
+        $(function () {
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('column_show'));
+            // const xhr = new XMLHttpRequest();
+            // xhr.open('get', BigNew.dataCategory);
+            // xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+            // xhr.send();
+            // xhr.onreadystatechange = function () {
+            //     if (xhr.readyState === 4) {
+            //         const backData = JSON.parse(xhr.response)
+            //         console.log(backData);
+            //         if (backData.code === 200) {
+            //             loadPieEcharts(backData.date)
+            //         }
+            //     }
+            // }
+            loadBarEcharts()
 
 
-        // 使用刚指定的配置项和数据显示图表。
-        myChart2.setOption(option2);
+            function loadBarEcharts() {
+                option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    title: {
+                        text: '分类访问量',
+                        left: 'center'
+                    },
+                    legend: {
+                        top: '30',
+                        data: ["爱生活", "爱旅行", "爱美食", "爱运动", "经济特区", "魂牵梦萦"]
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '2.3%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: ['一月', '二月', '三月', '四月']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    color: ['#5885e8', '#13cfd5', '#00ce68', '#ff9565', '#20ff19'],
+
+                    series: [
+                        {
+                            name: '爱生活',
+                            type: 'bar',
+                            data: [77, 32, 36, 47, 33, 1]
+                        },
+                        {
+                            name: '爱旅行',
+                            type: 'bar',
+                            data: [41, 77, 27, 61, 17, 12]
+                        },
+                        {
+                            name: '爱美食',
+                            type: 'bar',
+                            data: [87, 57, 89, 44, 54, 17]
+                        },
+                        {
+                            name: '爱运动',
+                            type: 'bar',
+                            data: [70, 24, 30, 49, 19, 77]
+                        },
+                        {
+                            name: '经济特区',
+                            type: 'bar',
+                            data: [12, 50, 90, 50, 50, 76]
+                        },
+                        {
+                            name: '魂牵梦萦',
+                            type: 'bar',
+                            data: [1, 84, 8, 15, 66, 88]
+                        },
+
+                    ]
+                };
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            }
+
+        })
+
+
     </script>
 </body>
 
