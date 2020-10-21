@@ -147,6 +147,7 @@
                 success: function (backData) {
                     console.log(backData);
                     if (backData.code === 200) {
+                        $('.level02>li:eq(0)', window.parent.document).addClass('active').siblings().removeClass('active');
                         location.href = './article_list.html';
                     }
                 }

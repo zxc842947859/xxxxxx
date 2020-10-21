@@ -36,7 +36,7 @@
                 <div class="form-group">
                     <label for="inputCover" class="col-sm-2 control-label">文章封面：</label>
                     <div class="col-sm-10">
-                        <img src="images/pic06.jpg" class="article_cover">
+                        <img class="article_cover">
                         <input name="cover" type="file" id="inputCover">
                     </div>
                 </div>
@@ -136,6 +136,8 @@
                     console.log(backData);
                     if (backData.code === 200) {
                         location.href = './article_list.html';
+                        $('.level02>li:eq(0)', window.parent.document).addClass('active').siblings().removeClass('active');
+
                     }
                 }
             })

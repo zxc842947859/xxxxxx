@@ -192,6 +192,16 @@
                     }
                 })
             })
+
+            // 发布文章
+            $('#release_btn').on('click', function () {
+                $('.level02>li:eq(1)', window.parent.document).addClass('active').siblings().removeClass('active');
+            })
+
+            $('tbody').on('click', '.text-center .btn-default', function () {
+                $('.level02>li:eq(1)', window.parent.document).addClass('active').siblings().removeClass('active');
+
+            })
         })
     </script>
 </body>
