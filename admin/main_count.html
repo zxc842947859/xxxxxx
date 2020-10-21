@@ -328,8 +328,24 @@
             }
 
         })
+    </script>
 
-
+    <!-- 顶部统计数据 -->
+    <script>
+        $(function () {
+            $.ajax({
+                type: 'get',
+                url: BigNew.dataInfo,
+                success: function (backData) {
+                    // console.log(backData);
+                    const $spannel = $('.spannel_list .spannel>em');
+                    // console.log($spannel);
+                    Object.values(backData).forEach((element,index) => {
+                        $spannel.eq(index).text(element);
+                    });
+                }
+            })
+        })
     </script>
 </body>
 
