@@ -362,7 +362,8 @@
                 // $('.article_info').html('加载中...');
                 $.ajax({
                     type: 'get',
-                    url: 'http://192.168.19.224:8080/api/v1' + '/index/article',
+                    // url: 'http://192.168.19.224:8080/api/v1' + '/index/article',
+                    url: 'https://autumnfish.cn/bignews/api/v1' + '/index/article',
                     data: { id: id || location.search.split('=')[1] },
                     success: function (backData) {
                         if (backData.code === 200) {
@@ -397,7 +398,8 @@
                 }
                 $.ajax({
                     type: 'post',
-                    url: 'http://192.168.19.224:8080/api/v1' + '/index/post_comment',
+                    // url: 'http://192.168.19.224:8080/api/v1' + '/index/post_comment',
+                    url: 'https://autumnfish.cn/bignews/api/v1' + '/index/post_comment',
                     data: {
                         author,
                         articleId,
@@ -421,7 +423,8 @@
                 console.log(articleId);
                 $.ajax({
                     type: 'get',
-                    url: 'http://192.168.19.224:8080/api/v1' + '/index/get_comment',
+                    // url: 'http://192.168.19.224:8080/api/v1' + '/index/get_comment',
+                    url: 'https://autumnfish.cn/bignews/api/v1' + '/index/get_comment',
                     data: {articleId},
                     success: function (backData) {
                         console.log(backData, 'xx');

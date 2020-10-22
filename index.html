@@ -298,7 +298,8 @@
         function renderTemplate(url, sel, tempId) {
             $.ajax({
                 type: 'get',
-                url: 'http://192.168.19.224:8080/api/v1' + url,
+                // url: 'http://192.168.19.224:8080/api/v1' + url,
+                url: 'https://autumnfish.cn/bignews/api/v1' + url,
                 success: function (backData) {
                     console.log(backData);
                     if (backData.code === 200) {
