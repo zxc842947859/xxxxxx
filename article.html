@@ -269,7 +269,7 @@
             <form action="" class="comment_form">
                 <div class="form_group">
                     <label>用户名：</label>
-                    <input type="text" placeholder="请输入用户名" class="comment_name">
+                    <input type="text" placeholder="请输入用户名" class="comment_name" data-id="{{data.id}}">
                 </div>
                 <div class="form_group">
                     <label>评论内容：</label>
@@ -351,13 +351,14 @@
                 $.ajax({
                     type: 'get',
                     url: 'http://192.168.19.224:8080/api/v1' + '/index/article',
-                    data: {id: id || location.search.split('=')[1]},
+                    data: { id: id || location.search.split('=')[1] },
                     success: function (backData) {
                         if (backData.code === 200) {
                             // const da = backData.data;
                             // console.log(backData);
                             // $('.breadcrumb').children('a').eq(1).text(da.category);
                             $('.article_info').html(template('article_info', backData));
+
                         }
                     }
                 })
@@ -369,6 +370,35 @@
                 // e.preventDefault();
                 // console.log($(this).attr('data-id'));
                 getArticleDetail($(this).attr('data-id'))
+            })
+
+            // 7.发表评论
+            $('.article_info').on('submit', '.comment_form', function (e) {
+                e.preventDefault();
+                const author = $('.comment_name').val(),
+                    articleId = $('.comment_name').attr('data-id'),
+                    content = $('.comment_input').val();
+                if (!(author && articleId && content)) {
+                    alert('评论信息不完整,请认真填写!')
+                    return;
+                }
+                $.ajax({
+                    type: 'post',
+                    url: 'http://192.168.19.224:8080/api/v1' + '/index/post_comment',
+                    data: {
+                        author,
+                        articleId,
+                        content
+                    },
+                    success: function (backData) {
+                        console.log(backData);
+                        if (backData.code === 201) {
+                            $('.comment_name').val('');
+                            $('.comment_input').val('');
+                            alert('评论发布成功!')
+                        }
+                    }
+                })
             })
         })
     </script>
