@@ -207,7 +207,8 @@
 
     {{each data.data v}}
         <div class="common_news_list">
-            <a href="/article.html?id={{v.id}}" class="list_pic"><img src="{{ v.cover.includes('https') ? v.cover.slice(v.cover.indexOf('248')+4) : v.cover.replace('http://134.175.59.248', 'http://134.175.59.248')}}" alt=""></a>
+            <!-- <a href="/article.html?id={{v.id}}" class="list_pic"><img src="{{ v.cover.includes('https') ? v.cover.slice(v.cover.indexOf('248')+4) : v.cover.replace('http://134.175.59.248', 'http://134.175.59.248:8080')}}" alt=""></a> -->
+            <a href="/article.html?id={{v.id}}" class="list_pic"><img src="{{ v.cover.indexOf('8080') === -1 ? v.cover.replace('http://134.175.59.248', 'http://134.175.59.248:8080') : v.cover}}" alt=""></a>
             <h4><a href="/article.html?id={{v.id}}">{{v.title}}</a></h4>
             <p>{{@ v.content}}
             </p>
@@ -220,9 +221,10 @@
     {{/each}}
 
 
-
+ 
 </script>
     <script>
+
         $(function () {
             /**
              * @description: 渲染模板
@@ -260,19 +262,19 @@
 
                 $.ajax({
                     type: 'get',
-                    url: BigNew.article_query,
-                    headers: {
-                        'Authorization': localStorage.getItem('token')
-                    },
+                    url: 'https://autumnfish.cn/bignews/api/v1' + '/index/search',
+                    // headers: {
+                    //     'Authorization': localStorage.getItem('token')
+                    // },
                     data: {
                         key: option.key,
                         type: location.search.split('=')[1],
-                        state: '已发布',
                         page: option.page,
                         perpage: option.perpage || 6
                     },
                     success: function (backData) {
                         console.log(backData);
+                        
                         if (backData.code === 200) {
                             $('.common_news_content').html(template('common_news', backData));
                             if (initPage) {
