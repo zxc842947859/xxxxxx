@@ -1,7 +1,7 @@
 //使用一个沙箱模式
 ;(function(w){
     //声明一个局部变量,记录基地址
-    var baseURL = 'http://192.168.3.31:8080/api/v1'
+    var baseURL = 'http://192.168.19.224:8080/api/v1'
     //声明一个对象BigNew,用来记录当前这个项目中所有需要用到的接口地址,
     var BigNew = {
         baseURL:baseURL,//基地址

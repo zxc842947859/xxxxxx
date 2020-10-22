@@ -131,7 +131,7 @@
         <div class="right_con setfl">
             <div class="common_wrap">
                 <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
-                <ul class="content_list">
+                <ul class="content_list hotrank_list">
                     <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><span class="second">2</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span class="third">3</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
@@ -208,6 +208,75 @@
     <!-- 引入模板引擎js文件 -->
     <script src="./js/template-web.js"></script>
     <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./admin/libs/http.js"></script>
+
+    <!-- 1. 文章类型 -->
+    <script id="cat-id" type="text/html">
+        <li class="up"></li>
+        {{each data v}}
+        <li><a href="./list.html?id={{v.id}}">{{v.name}}</a></li>
+        {{/each}}
+    </script>
+
+    <!-- 3. 文章热门排行 -->
+    <script id="hotrank_list" type="text/html">
+        {{each data v }} 
+            <li><span {{if $index + 1 === 1}} class="first" {{else if $index + 1 === 2}} class="second" {{else if $index + 1 === 3}} class="third" {{/if}}>{{$index + 1}}</span><a href="/article.html?id={{v.id}}">{{v.title}}</a></li>
+        {{/each}}
+    </script>
+
+    <!-- 5. 最新评论 -->
+    <script id="comment_list" type="text/html">
+        {{each data v }}
+            <li>
+                <span>{{v.author[0]}}</span>
+                <b><em>{{v.author}}</em> {{v.date}}说:</b>
+                <strong>{{v.intro}}</strong>
+            </li>
+        {{/each}}
+    </script>
+
+    <!-- 6. 焦点关注 -->
+    <script id="guanzhu_list" type="text/html">
+        {{each data v}}
+        <li><a href="#">{{v.intro}}</a></li>
+        {{/each}}
+    </script>
+
+    <script>
+        $(function () {
+            /**
+             * @description: 渲染模板
+             * @param {type} url: 路径
+             * @param {type} sel: 选择器
+             * @param {type} tempId: 模板id
+             * @return {type} 
+             */
+            function renderTemplate(url, sel, tempId) {
+                $.ajax({
+                    type: 'get',
+                    url: 'http://192.168.19.224:8080/api/v1' + url,
+                    success: function (backData) {
+                        console.log(backData);
+                        if (backData.code === 200) {
+                            $(sel).html(template(tempId, backData));
+                        }
+                    }
+                })
+            }
+            // 1. 文章类型
+            renderTemplate('/index/category', '.level_two', 'cat-id')
+
+            // 3. 文章热门排行
+            renderTemplate('/index/rank', '.hotrank_list', 'hotrank_list')
+            // 4. 最新资
+            // renderTemplate('/index/latest', '.common_news', 'common_news')
+            // 5. 最新评论
+            renderTemplate('/index/latest_comment', '.comment_list', 'comment_list')
+            // 6. 焦点关注
+            renderTemplate('/index/attention', '.guanzhu_list', 'guanzhu_list')
+        })
+    </script>
 
 </body>
 
