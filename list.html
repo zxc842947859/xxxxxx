@@ -202,13 +202,13 @@
 </script>
     <script id="common_news" type="text/html">
     <div class="list_title">
-        <h3>{{data.data[0].category}}</h3>
+        <h3>{{ data.data.length ? data.data[0].category : '还没有文章'}}</h3>
     </div>
 
     {{each data.data v}}
         <div class="common_news_list">
             <!-- <a href="/article.html?id={{v.id}}" class="list_pic"><img src="{{ v.cover.includes('https') ? v.cover.slice(v.cover.indexOf('248')+4) : v.cover.replace('http://134.175.59.248', 'http://134.175.59.248:8080')}}" alt=""></a> -->
-            <a href="/article.html?id={{v.id}}" class="list_pic"><img src="{{ v.cover.indexOf('8080') === -1 ? v.cover.replace('http://134.175.59.248', 'http://134.175.59.248:8080') : v.cover}}" alt=""></a>
+            <a href="/article.html?id={{v.id}}" class="list_pic"><img src="{{ v.cover.indexOf('8080') === -1 ? v.cover.replace('http://134.175.59.248', 'https://134.175.59.248:8080') : v.cover}}" alt=""></a>
             <h4><a href="/article.html?id={{v.id}}">{{v.title}}</a></h4>
             <p>{{@ v.content}}
             </p>
@@ -267,7 +267,7 @@
                     //     'Authorization': localStorage.getItem('token')
                     // },
                     data: {
-                        key: option.key,
+                        // key: option.key,
                         type: location.search.split('=')[1],
                         page: option.page,
                         perpage: option.perpage || 6
@@ -283,7 +283,7 @@
                                 if (backData.data.data.length !== 0) {
                                     // 初始化分页器
                                     $('#pagination-demo').twbsPagination({
-                                        totalPages: backData.data.totalPage,
+                                        totalPages: backData.data.totalCount ? ((backData.data.totalCount / 6) + ((backData.data.totalCount % 6) ? 1 : 0)) : 0,
                                         visiblePages: 7,
                                         startPage: 1,
                                         hideOnlyOnePage: true,
