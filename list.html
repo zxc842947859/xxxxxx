@@ -207,7 +207,7 @@
 
     {{each data.data v}}
         <div class="common_news_list">
-            <a href="/article.html?id={{v.id}}" class="list_pic"><img src="{{ v.cover.includes('https') ? v.cover.slice(v.cover.indexOf('248')+4) : v.cover.replace('http://134.175.59.248', 'http://134.175.59.248:8080')}}" alt=""></a>
+            <a href="/article.html?id={{v.id}}" class="list_pic"><img src="{{ v.cover.includes('https') ? v.cover.slice(v.cover.indexOf('248')+4) : v.cover.replace('http://134.175.59.248', 'http://134.175.59.248')}}" alt=""></a>
             <h4><a href="/article.html?id={{v.id}}">{{v.title}}</a></h4>
             <p>{{@ v.content}}
             </p>
