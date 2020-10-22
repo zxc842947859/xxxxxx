@@ -54,8 +54,9 @@
     </div>
 
     <div class="main_con clearfix">
-        <div class="left_con setfr">
-            <div class="breadcrumb">
+        <div class="left_con setfr article_info">
+            加载中...
+            <!-- <div class="breadcrumb">
                 当前位置： <a href="#">首页</a> &gt; <a href="#">科技</a> &gt; 文章详情
             </div>
             <h3 class="article_title">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</h3>
@@ -126,7 +127,7 @@
                         遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="right_con setfl">
             <div class="common_wrap">
@@ -218,14 +219,14 @@
         {{/each}}
     </script>
 
-    <!-- 3. 文章热门排行 -->
+    <!-- 2. 文章热门排行 -->
     <script id="hotrank_list" type="text/html">
         {{each data v }} 
             <li><span {{if $index + 1 === 1}} class="first" {{else if $index + 1 === 2}} class="second" {{else if $index + 1 === 3}} class="third" {{/if}}>{{$index + 1}}</span><a href="/article.html?id={{v.id}}">{{v.title}}</a></li>
         {{/each}}
     </script>
 
-    <!-- 5. 最新评论 -->
+    <!-- 3. 最新评论 -->
     <script id="comment_list" type="text/html">
         {{each data v }}
             <li>
@@ -236,13 +237,84 @@
         {{/each}}
     </script>
 
-    <!-- 6. 焦点关注 -->
+    <!-- 4. 焦点关注 -->
     <script id="guanzhu_list" type="text/html">
         {{each data v}}
         <li><a href="#">{{v.intro}}</a></li>
         {{/each}}
     </script>
 
+    <script id="article_info" type="text/html">
+        <div class="left_con setfr">
+            <div class="breadcrumb">
+                当前位置： <a href="#">首页</a> &gt; <a href="#">{{data.category}}</a> &gt; 文章详情
+            </div>
+            <h3 class="article_title">{{data.title}}</h3>
+            <div class="article_info">{{data.author}} 发布于 {{data.date}}&nbsp;&nbsp;&nbsp;分类: {{data.category}}&nbsp;&nbsp;&nbsp;阅读:
+                ({{data.read}})&nbsp;&nbsp;&nbsp;评论: ({{data.comments}})</div>
+            <div class="article_con">
+
+                {{@ data.content}}
+
+            </div>
+            <div class="article_links">
+                {{if data.prev}}
+                上一篇： <a data-id="{{data.prev.id}}" href="javascript:;">{{data.prev.title}}</a><br>
+                {{/if}}
+                {{if data.next}}
+                下一篇： <a data-id="{{data.next.id}}" href="javascript:;">{{data.next.title}}</a>
+                {{/if}}
+            </div>
+
+            <form action="" class="comment_form">
+                <div class="form_group">
+                    <label>用户名：</label>
+                    <input type="text" placeholder="请输入用户名" class="comment_name">
+                </div>
+                <div class="form_group">
+                    <label>评论内容：</label>
+                    <textarea placeholder="请发表您的评论" class="comment_input"></textarea>
+                </div>
+                <div class="form_group">
+                    <input type="submit" name="" value="评 论" class="comment_sub"></div>
+            </form>
+
+            <div class="comment_count">
+                4条评论
+            </div>
+
+            <div class="comment_list_con">
+                <div class="comment_detail_list">
+                    <div class="person_pic fl">乔</div>
+                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
+                    <div class="comment_text fl">
+                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                    </div>
+                </div>
+                <div class="comment_detail_list">
+                    <div class="person_pic fl">段</div>
+                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
+                    <div class="comment_text fl">
+                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                    </div>
+                </div>
+                <div class="comment_detail_list">
+                    <div class="person_pic fl">虚</div>
+                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
+                    <div class="comment_text fl">
+                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                    </div>
+                </div>
+                <div class="comment_detail_list">
+                    <div class="person_pic fl">王</div>
+                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
+                    <div class="comment_text fl">
+                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
     <script>
         $(function () {
             /**
@@ -266,15 +338,38 @@
             }
             // 1. 文章类型
             renderTemplate('/index/category', '.level_two', 'cat-id')
-
-            // 3. 文章热门排行
+            // 2. 文章热门排行
             renderTemplate('/index/rank', '.hotrank_list', 'hotrank_list')
-            // 4. 最新资
-            // renderTemplate('/index/latest', '.common_news', 'common_news')
-            // 5. 最新评论
+            // 3. 最新评论
             renderTemplate('/index/latest_comment', '.comment_list', 'comment_list')
-            // 6. 焦点关注
+            // 4. 焦点关注
             renderTemplate('/index/attention', '.guanzhu_list', 'guanzhu_list')
+
+            // 5.获取并展示文章详情
+            function getArticleDetail(id) {
+                // $('.article_info').html('加载中...');
+                $.ajax({
+                    type: 'get',
+                    url: 'http://192.168.19.224:8080/api/v1' + '/index/article',
+                    data: {id: id || location.search.split('=')[1]},
+                    success: function (backData) {
+                        if (backData.code === 200) {
+                            // const da = backData.data;
+                            // console.log(backData);
+                            // $('.breadcrumb').children('a').eq(1).text(da.category);
+                            $('.article_info').html(template('article_info', backData));
+                        }
+                    }
+                })
+            };
+            getArticleDetail();
+
+            // 6.上一页, 下一页
+            $('.article_info').on('click', '.article_links a', function (e) {
+                // e.preventDefault();
+                // console.log($(this).attr('data-id'));
+                getArticleDetail($(this).attr('data-id'))
+            })
         })
     </script>
 
