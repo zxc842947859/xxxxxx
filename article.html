@@ -315,6 +315,18 @@
             </div>
         </div>
     </script>
+
+    <script id="comment-temp" type="text/html">
+            {{each data v}}
+            <div class="comment_detail_list">
+                <div class="person_pic fl">{{v.author[0]}}</div>
+                <div class="name_time fl"><b>{{v.author}}</b><span>{{v.date}}{{v.time}}</span></div>
+                <div class="comment_text fl">
+                    {{v.content}}
+                </div>
+            </div>
+            {{/each}}
+    </script>
     <script>
         $(function () {
             /**
@@ -358,6 +370,7 @@
                             // console.log(backData);
                             // $('.breadcrumb').children('a').eq(1).text(da.category);
                             $('.article_info').html(template('article_info', backData));
+                            getComment($('.comment_name').attr('data-id') || location.search.split('=')[1]);
 
                         }
                     }
@@ -395,11 +408,30 @@
                         if (backData.code === 201) {
                             $('.comment_name').val('');
                             $('.comment_input').val('');
+                            getComment($('.comment_name').attr('data-id') || location.search.split('=')[1]);
+
                             alert('评论发布成功!')
                         }
                     }
                 })
             })
+        
+            // 8.展示文章评论
+            function getComment(articleId) {
+                console.log(articleId);
+                $.ajax({
+                    type: 'get',
+                    url: 'http://192.168.19.224:8080/api/v1' + '/index/get_comment',
+                    data: {articleId},
+                    success: function (backData) {
+                        console.log(backData, 'xx');
+                        if (backData.code === 200) {
+                            $('.comment_count').text(backData.data.length + '条评论');
+                            $('.comment_list_con').html(template('comment-temp', backData));
+                        }
+                    }
+                })
+            }
         })
     </script>
 
